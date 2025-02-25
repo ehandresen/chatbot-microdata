@@ -1,0 +1,1 @@
+// Skal håndterem OpenAPI requests
