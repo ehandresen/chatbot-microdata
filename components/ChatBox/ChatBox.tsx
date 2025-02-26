@@ -3,7 +3,7 @@ import { useState } from "react";
 import ChatToggleButton from "./ChatToggleButton";
 import ChatWindow from "./ChatWindow";
 
-const Chatbox = () => {
+const ChatBox = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -14,4 +14,4 @@ const Chatbox = () => {
   );
 };
 
-export default Chatbox;
+export default ChatBox;
