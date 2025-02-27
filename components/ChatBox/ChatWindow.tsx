@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
+import ChatPanel from "../ChatPanel";
+import NotePanel from "../NotePanel";
 
 interface ChatWindowProps {
   closeChat: () => void;
@@ -46,22 +48,26 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
       className={`fixed ${
-        isExpanded ? "inset-0 flex justify-center items-center bg-white" : "bottom-16 right-4"
+        isExpanded ? "inset-0 flex bg-white" : "bottom-16 right-4"
       }`}
     >
+      {isExpanded && <ChatPanel />}
       <div
-        className={`bg-white shadow-xl border flex flex-col transition-all ${
-          isExpanded ? "w-full max-w-[600px] h-full rounded-none" : "w-[400px] h-[500px] rounded-xl"
+        className={`bg-white flex flex-col transition-all ${
+          isExpanded
+            ? "w-full max-w-[700px] h-full rounded-none mx-auto"
+            : "w-[450px] h-[500px] rounded-lg border shadow-lg"
         }`}
       >
         <ChatHeader closeChat={closeChat} toggleExpand={() => setIsExpanded(!isExpanded)} isExpanded={isExpanded} />
         <div className="flex-1 overflow-y-auto p-4">
           <ChatMessages messages={messages} />
         </div>
-        <div className="p-4 border-t bg-white">
+        <div className="p-4 bg-white">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </div>
+      {isExpanded && <NotePanel />}
     </motion.div>
   );
 };
