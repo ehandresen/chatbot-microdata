@@ -7,6 +7,8 @@ interface ChatInputProps {
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState("");
 
+  
+
   const handleSend = () => {
     if (message.trim() === "") return; // Ikke send tomme meldinger
     onSendMessage(message);
