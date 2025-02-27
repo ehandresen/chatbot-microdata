@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@langchain/community": "^0.3.33",
+    "@langchain/core": "^0.3.41",
+    "@langchain/openai": "^0.4.4",
     "@supabase/supabase-js": "^2.48.1",
     "framer-motion": "^12.4.7",
     "langchain": "^0.3.19",
