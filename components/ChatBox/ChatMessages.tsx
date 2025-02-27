@@ -1,10 +1,5 @@
 import { useEffect, useRef } from "react";
-
-interface Message {
-  id: number;
-  text: string;
-  sender: "user" | "bot";
-}
+import { Message } from "@/types/chat"; // ✅ Bruker riktig type fra types/chat.ts
 
 interface ChatMessagesProps {
   messages?: Message[];

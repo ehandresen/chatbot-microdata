@@ -2,20 +2,23 @@ import { useState } from "react";
 import ChatSearch from "./ChatSearch";
 import ChatList from "./ChatList";
 import NewChatButton from "./NewChatButton";
+import DeleteAllChatsButton from "./DeleteAllChatsButton"; // ✅ Importer slett-knappen
 
 interface Chat {
   id: string;
-  title: string; // Dato som tittel
-  timestamp: number; // Tidspunkt for samtale
+  title: string;
+  timestamp: number;
 }
+
 interface ChatPanelProps {
   onSelectChat: (chatId: string) => void;
   onNewChat: () => void;
+  onDeleteAllChats: () => void; // ✅ Ny prop for sletting
   chats: Chat[];
-  activeChat: Chat | null;  // Legg til activeChat som en prop
+  activeChat: Chat | null;
 }
 
-const ChatPanel: React.FC<ChatPanelProps> = ({ onSelectChat, onNewChat, chats, activeChat }) => {
+const ChatPanel: React.FC<ChatPanelProps> = ({ onSelectChat, onNewChat, onDeleteAllChats, chats, activeChat }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filtrer samtaler basert på søk
@@ -32,8 +35,12 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ onSelectChat, onNewChat, chats, a
         chats={filteredChats}
         searchQuery={searchQuery}
         onSelectChat={onSelectChat}
-        activeChat={activeChat} // Send activeChat videre til ChatList
+        activeChat={activeChat}
       />
+      {/* ✅ Slett-knapp med fast plassering nederst */}
+      <div className="mt-4 border-t pt-4">
+        <DeleteAllChatsButton onDeleteAll={onDeleteAllChats} />
+      </div>
     </div>
   );
 };

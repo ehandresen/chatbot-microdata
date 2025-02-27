@@ -1,26 +1,11 @@
-import { useState } from "react";
+import useChatInput from "@/hooks/useChatInput";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
-  const [message, setMessage] = useState("");
-
-  
-
-  const handleSend = () => {
-    if (message.trim() === "") return; // Ikke send tomme meldinger
-    onSendMessage(message);
-    setMessage(""); // Tøm inputfeltet etter sending
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleSend();
-    }
-  };
+  const { message, setMessage, handleSend, handleKeyDown } = useChatInput(onSendMessage);
 
   return (
     <div className="flex mt-2">
