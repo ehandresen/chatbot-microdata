@@ -1,10 +1,6 @@
 import ChatListItem from "./ChatListItem";
+import { Chat } from "@/types/chat"; 
 
-interface Chat {
-  id: string;
-  title: string;
-  timestamp: number;
-}
 
 interface ChatListProps {
     chats: Chat[];

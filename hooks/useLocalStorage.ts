@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 
 /**
- * Custom hook for å håndtere lagring og henting av data i localStorage.
- * @param key - Nøkkelen som brukes i localStorage
- * @param initialValue - Startverdi hvis ingen data er lagret
+ * @param key
+ * @param initialValue
  */
 const useLocalStorage = <T,>(key: string, initialValue: T) => {
   const [storedValue, setStoredValue] = useState<T>(() => {

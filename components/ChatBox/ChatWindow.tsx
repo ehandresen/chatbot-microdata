@@ -6,8 +6,8 @@ import ChatPanel from "../ChatPanel/ChatPanel";
 import NotePanel from "../NotePanel";
 import useChat from "@/hooks/useChat";
 import useSendMessage from "@/hooks/useSendMessage";
-import useChatWindowState from "@/hooks/useChatWindowState"; // ✅ Ny hook for ekspandering
-import useDeleteChats from "@/hooks/useDeleteChats"; // ✅ Ny hook for sletting
+import useChatWindowState from "@/hooks/useChatWindowState"; 
+import useDeleteChats from "@/hooks/useDeleteChats"; 
 
 interface ChatWindowProps {
   closeChat: () => void;
@@ -17,24 +17,24 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
   const {
     chats,
     activeChat,
-    isFirstChat, // ✅ Legger til isFirstChat
+    isFirstChat, 
     setChats,
     setActiveChat,
-    setIsFirstChat, // ✅ Legger til setIsFirstChat
+    setIsFirstChat, 
     startNewChat,
     openChat,
   } = useChat();
 
-  const { isExpanded, toggleExpand } = useChatWindowState(); // ✅ Bruker ny hook
+  const { isExpanded, toggleExpand } = useChatWindowState();
   const { handleSendMessage } = useSendMessage({
     chats,
     activeChat,
-    isFirstChat, // ✅ Sender isFirstChat til useSendMessage
+    isFirstChat,
     setChats,
     setActiveChat,
-    setIsFirstChat, // ✅ Sender setIsFirstChat til useSendMessage
+    setIsFirstChat, 
   });
-  const { handleDeleteAllChats } = useDeleteChats({ setChats, setActiveChat }); // ✅ Bruker ny hook
+  const { handleDeleteAllChats } = useDeleteChats({ setChats, setActiveChat }); 
 
   return (
     <motion.div
@@ -49,7 +49,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
           activeChat={activeChat}
           onSelectChat={openChat}
           onNewChat={startNewChat}
-          onDeleteAllChats={handleDeleteAllChats} // ✅ Sender prop til ChatPanel
+          onDeleteAllChats={handleDeleteAllChats} 
         />
       )}
       <div

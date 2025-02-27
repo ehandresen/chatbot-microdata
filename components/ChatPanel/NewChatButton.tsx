@@ -10,7 +10,7 @@ const NewChatButton: React.FC<NewChatButtonProps> = ({ onClick }) => {
   const handleClick = () => {
     setIsLoading(true);
     onClick();
-    setTimeout(() => setIsLoading(false), 500); // Simulert kort delay for UX
+    setTimeout(() => setIsLoading(false), 500); 
   };
 
   return (

@@ -4,9 +4,9 @@ const useChatInput = (onSendMessage: (message: string) => void) => {
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
-    if (message.trim() === "") return; // Ikke send tomme meldinger
+    if (message.trim() === "") return;
     onSendMessage(message);
-    setMessage(""); // Tøm inputfeltet etter sending
+    setMessage(""); 
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

@@ -1,11 +1,11 @@
 import { Chat } from "@/types/chat"; 
 import useLocalStorage from "@/hooks/useLocalStorage"; 
-import useFirstChat from "@/hooks/useFirstChat"; // ✅ Ny hook
+import useFirstChat from "@/hooks/useFirstChat";
 
 const useChat = () => {
   const [chats, setChats] = useLocalStorage<Chat[]>("chats", []); 
   const [activeChat, setActiveChat] = useLocalStorage<Chat | null>("activeChat", null);
-  const { isFirstChat, setIsFirstChat } = useFirstChat(); // ✅ Bruker den nye hooken
+  const { isFirstChat, setIsFirstChat } = useFirstChat();
 
   const startNewChat = () => {
     if (isFirstChat) return; 
