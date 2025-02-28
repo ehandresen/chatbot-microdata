@@ -45,20 +45,25 @@ const createNewChat = (
   localStorage.setItem("activeChat", JSON.stringify(newChat));
 
   setIsFirstChat(false);
+
+  return newChat;
 };
 
 const addMessageToChat = (
   text: string,
+  sender: "user" | "bot",
   activeChat: Chat | null,
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>,
   setActiveChat: React.Dispatch<React.SetStateAction<Chat | null>>
 ) => {
+  if (!activeChat) return;
+
   const now = Date.now();
-  const newMessage: Message = { id: `${now}-${Math.random()}`, text, sender: "user" };
+  const newMessage: Message = { id: `${now}-${Math.random()}`, text, sender };
 
   setChats((prevChats) =>
     prevChats.map((chat) =>
-      chat.id === activeChat?.id ? { ...chat, messages: [...chat.messages, newMessage] } : chat
+      chat.id === activeChat.id ? { ...chat, messages: [...chat.messages, newMessage] } : chat
     )
   );
 
@@ -67,28 +72,26 @@ const addMessageToChat = (
   );
 };
 
-const addBotReply = (
-  chatId: string,
-  setChats: React.Dispatch<React.SetStateAction<Chat[]>>,
-  setActiveChat: React.Dispatch<React.SetStateAction<Chat | null>>
-) => {
-  setTimeout(() => {
-    const botReply: Message = {
-      id: `${Date.now()}-${Math.random()}`,
-      text: "Beklager, jeg forstår ikke helt ennå! 🚀",
-      sender: "bot",
-    };
+const fetchBotReply = async (userMessage: string): Promise<string> => {
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: userMessage }),
+    });
 
-    setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === chatId ? { ...chat, messages: [...chat.messages, botReply] } : chat
-      )
-    );
+    const data = await response.json();
 
-    setActiveChat((prevActiveChat) =>
-      prevActiveChat ? { ...prevActiveChat, messages: [...prevActiveChat.messages, botReply] } : null
-    );
-  }, 1000);
+    if (!response.ok) {
+      console.error("Error from API:", data.error || "Unknown error");
+      return "Beklager, det oppstod en feil med chatboten. 🚀";
+    }
+
+    return data.response; // API response should contain the chatbot's reply
+  } catch (error) {
+    console.error("Failed to fetch bot reply:", error);
+    return "Beklager, jeg kunne ikke svare akkurat nå. 🚀";
+  }
 };
 
 const useSendMessage = ({
@@ -100,13 +103,18 @@ const useSendMessage = ({
   setIsFirstChat,
 }: UseSendMessageProps) => {
   const handleSendMessage = useCallback(
-    (text: string) => {
+    async (text: string) => {
+      let chat = activeChat;
+
       if (isFirstChat || !activeChat) {
-        createNewChat(text, chats, setChats, setActiveChat, setIsFirstChat);
-        addBotReply(Date.now().toString(), setChats, setActiveChat);
+        chat = createNewChat(text, chats, setChats, setActiveChat, setIsFirstChat);
       } else {
-        addMessageToChat(text, activeChat, setChats, setActiveChat);
-        addBotReply(activeChat.id, setChats, setActiveChat);
+        addMessageToChat(text, "user", activeChat, setChats, setActiveChat);
+      }
+
+      if (chat) {
+        const botReply = await fetchBotReply(text);
+        addMessageToChat(botReply, "bot", chat, setChats, setActiveChat);
       }
     },
     [chats, activeChat, isFirstChat, setChats, setActiveChat, setIsFirstChat]

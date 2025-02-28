@@ -4,6 +4,10 @@ import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 export async function textSplitter() {
   try {
@@ -19,11 +23,10 @@ export async function textSplitter() {
     const output = await splitter.createDocuments([text]);
 
     // Sjekk variablene så typescript slutter å klage
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_API_KEY) {
-      throw new Error(
-        "Missing environment variables: SUPABASE_URL or SUPABASE_API_KEY"
-      );
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_API_KEY || !process.env.OPENAI_API_KEY) {
+      throw new Error("Missing environment variables: SUPABASE_URL, SUPABASE_API_KEY, or OPENAI_API_KEY");
     }
+    
 
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseApiKey = process.env.SUPABASE_API_KEY;
@@ -32,7 +35,6 @@ export async function textSplitter() {
     const supabaseClient = createClient(supabaseUrl, supabaseApiKey);
 
     // Lag embeddings og last opp til supabase
-
     const embeddings = new OpenAIEmbeddings({
       openAIApiKey: openAIApiKey,
       //model: "text-embedding-3-small",
