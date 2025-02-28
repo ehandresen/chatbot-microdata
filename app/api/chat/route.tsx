@@ -19,8 +19,8 @@ const SIMILARITY_THRESHOLD = 0.7;
 // Antall chunks vi henter fra Supabase
 const MAX_MATCHES = 5;
 
-// OpenAI-modell
-const OPENAI_MODEL = "gpt-4";
+// OpenAI-modell (GPT-3.5 for raskere respons)
+const OPENAI_MODEL = "gpt-3.5-turbo";
 
 export async function POST(req: Request) {
     try {
@@ -77,8 +77,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ response: "Beklager, jeg fant ingen relevant informasjon." });
         }
 
-        // Hent ut innholdet fra relevante treff
-        const bestResponses = relevantMatches.map(match => match.content);
+        // Hent ut innholdet fra relevante treff (kun korte utdrag for mer effektiv prosessering)
+        const bestResponses = relevantMatches.map(match => match.content.slice(0, 300)); // Henter kun de første 300 tegnene
 
         // Bruk OpenAI til å generere et sammenhengende svar
         const gptResponse = await generateOpenAISummary(query, bestResponses);
@@ -105,11 +105,11 @@ async function generateOpenAISummary(userQuery: string, relevantTexts: string[])
             body: JSON.stringify({
                 model: OPENAI_MODEL,
                 messages: [
-                    { role: "system", content: "Du er en hjelpsom assistent som gir presise og informative svar basert på gitt informasjon." },
-                    { role: "user", content: `Bruk følgende informasjon for å svare på spørsmålet: "${userQuery}".\n\n${relevantTexts.join("\n\n")}\n\nSvar kort og presist, men med all viktig informasjon.` }
+                    { role: "system", content: "Du er en hjelpsom assistent som gir presise, korte og informative svar basert på gitt informasjon." },
+                    { role: "user", content: `Bruk kun nødvendig informasjon for å gi et direkte og presist svar på dette spørsmålet: "${userQuery}". Ikke legg til unødvendige detaljer.\n\n${relevantTexts.join("\n\n")}` }
                 ],
                 temperature: 0.3, // Lav temperatur for mer faktuelle svar
-                max_tokens: 500,
+                max_tokens: 300, // Raskere respons med færre tokens
             }),
         });
 
