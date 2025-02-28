@@ -13,6 +13,15 @@ const supabase = createClient(supabaseUrl!, supabaseKey!);
 // OpenAI API Key
 const openAIApiKey = process.env.OPENAI_API_KEY;
 
+// Minimum likhetsterskel for at en chunk skal anses som relevant
+const SIMILARITY_THRESHOLD = 0.7;
+
+// Antall chunks vi henter fra Supabase
+const MAX_MATCHES = 5;
+
+// OpenAI-modell
+const OPENAI_MODEL = "gpt-4";
+
 export async function POST(req: Request) {
     try {
         console.log("🟢 Received a request to /api/chat");
@@ -26,29 +35,24 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing query" }, { status: 400 });
         }
 
-        // Generate an embedding for the user's query
+        // Generer embedding for brukerens input
         console.log("⏳ Generating embedding for the query...");
         const embeddings = new OpenAIEmbeddings({ openAIApiKey });
         const queryEmbedding = await embeddings.embedQuery(query);
         
         console.log("✅ Query Embedding Generated. Length:", queryEmbedding.length);
-        console.log("🧐 Embedding Preview (first 10 values):", queryEmbedding.slice(0, 10), "...");
 
-        // Ensure query embedding is properly formatted
-        const formattedEmbedding = queryEmbedding as unknown as number[];
-        console.log("📏 Formatted Query Embedding:", formattedEmbedding.slice(0, 10), "...");
-
-        // Perform a similarity search using Supabase's vector search
+        // Kall Supabase for å finne flere lignende dokumenter
         console.log("📡 Sending request to Supabase match_documents RPC...");
         const { data, error } = await supabase.rpc("match_documents", {
-            query_embedding: formattedEmbedding, // Ensure correct format
-            match_count: 5,
-            filter: {}, // ✅ FIXED: Ensuring filter is an empty JSON object
+            query_embedding: queryEmbedding,
+            match_count: MAX_MATCHES, // Hent flere relevante treff
+            filter: {},
         });
 
         console.log("📢 Calling match_documents with:", {
-            query_embedding_length: formattedEmbedding.length,
-            match_count: 5,
+            query_embedding_length: queryEmbedding.length,
+            match_count: MAX_MATCHES,
         });
 
         console.log("🔍 Supabase Response:", { data, error });
@@ -58,20 +62,69 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Failed to match documents" }, { status: 500 });
         }
 
-        // Check if Supabase returned any results
+        // Hvis ingen relevante treff finnes, returner feilmelding
         if (!data || data.length === 0) {
             console.warn("⚠️ Supabase returned an empty result set.");
             return NextResponse.json({ response: "Beklager, jeg fant ingen relevant informasjon." });
         }
 
-        // Select the top match as the chatbot response
-        const bestMatch = data[0];
-        console.log("🏆 Best Match Found:", bestMatch);
+        // Filtrer ut resultater med for lav likhet
+        const relevantMatches = data.filter((match) => match.similarity >= SIMILARITY_THRESHOLD);
 
-        return NextResponse.json({ response: bestMatch.content });
+        // Hvis ingen treff har høy nok likhet, returner feilmelding
+        if (relevantMatches.length === 0) {
+            console.warn("⚠️ No results above similarity threshold.");
+            return NextResponse.json({ response: "Beklager, jeg fant ingen relevant informasjon." });
+        }
+
+        // Hent ut innholdet fra relevante treff
+        const bestResponses = relevantMatches.map(match => match.content);
+
+        // Bruk OpenAI til å generere et sammenhengende svar
+        const gptResponse = await generateOpenAISummary(query, bestResponses);
+
+        return NextResponse.json({ response: gptResponse });
 
     } catch (err) {
         console.error("❌ Unexpected API error:", err);
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    }
+}
+
+// Funksjon for å generere et oppsummert svar med OpenAI
+async function generateOpenAISummary(userQuery: string, relevantTexts: string[]): Promise<string> {
+    try {
+        console.log("🤖 Sending data to OpenAI for summarization...");
+
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${openAIApiKey}`,
+            },
+            body: JSON.stringify({
+                model: OPENAI_MODEL,
+                messages: [
+                    { role: "system", content: "Du er en hjelpsom assistent som gir presise og informative svar basert på gitt informasjon." },
+                    { role: "user", content: `Bruk følgende informasjon for å svare på spørsmålet: "${userQuery}".\n\n${relevantTexts.join("\n\n")}\n\nSvar kort og presist, men med all viktig informasjon.` }
+                ],
+                temperature: 0.3, // Lav temperatur for mer faktuelle svar
+                max_tokens: 500,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.choices || !data.choices[0]?.message?.content) {
+            console.error("❌ OpenAI API Error:", data);
+            return "Beklager, jeg kunne ikke generere et godt svar basert på informasjonen.";
+        }
+
+        console.log("✅ OpenAI generated response:", data.choices[0].message.content);
+        return data.choices[0].message.content.trim();
+
+    } catch (err) {
+        console.error("❌ OpenAI API Request Failed:", err);
+        return "Beklager, jeg kunne ikke generere et godt svar basert på informasjonen.";
     }
 }
