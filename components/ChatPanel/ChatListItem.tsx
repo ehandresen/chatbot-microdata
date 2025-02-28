@@ -1,11 +1,8 @@
-interface Chat {
-    id: string;
-    title: string; // Dato som tittel
-    timestamp: number; // Tidspunkt for samtale
-  }
+import { Chat } from "@/types/chat"; 
+
   interface ChatListItemProps {
     chat: Chat;
-    isActive: boolean; // Legg til isActive som en propp
+    isActive: boolean; 
     onClick: () => void;
   }
   
@@ -21,8 +18,7 @@ interface Chat {
         minute: "2-digit",
       });
   
-      // Dynamisk styling: bruker Tailwind CSS-klasser
-      const isActiveClass = isActive ? "border-2 border-blue-500 bg-blue-50" : "bg-white"; // Lys bakgrunn og tykkere border for aktiv chat
+      const isActiveClass = isActive ? "border-2 border-blue-500 bg-blue-50" : "bg-white"; 
   
       return (
         <div

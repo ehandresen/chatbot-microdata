@@ -3,7 +3,7 @@ import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ChatPanel from "../ChatPanel/ChatPanel";
-import NotePanel from "../NotePanel";
+import NotePanel from "../NotePanel/NotePanel";
 import useChat from "@/hooks/useChat";
 import useSendMessage from "@/hooks/useSendMessage";
 import useChatWindowState from "@/hooks/useChatWindowState"; 
