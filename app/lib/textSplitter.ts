@@ -5,6 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
+import "dotenv/config";
+
 export async function textSplitter() {
   try {
     const filePath = path.join(process.cwd(), "app/lib/microdata-info.txt");
@@ -32,7 +34,6 @@ export async function textSplitter() {
     const supabaseClient = createClient(supabaseUrl, supabaseApiKey);
 
     // Lag embeddings og last opp til supabase
-
     const embeddings = new OpenAIEmbeddings({
       openAIApiKey: openAIApiKey,
       //model: "text-embedding-3-small",
