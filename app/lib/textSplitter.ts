@@ -9,6 +9,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
+import "dotenv/config";
+
 export async function textSplitter() {
   try {
     const filePath = path.join(process.cwd(), "app/lib/microdata-info.txt");
