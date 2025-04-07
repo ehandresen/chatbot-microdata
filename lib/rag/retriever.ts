@@ -21,11 +21,11 @@ export async function createRetriever(): Promise<VectorStoreRetriever> {
 }
 
 // Test
-async function main() {
-  const retriever = await createRetriever();
+// async function main() {
+//   const retriever = await createRetriever();
 
-  const retrievedDocuments = await retriever.invoke("Hva er microdata?");
+//   const retrievedDocuments = await retriever.invoke("Hva er microdata?");
 
-  console.log(retrievedDocuments);
-}
-main();
+//   console.log(retrievedDocuments);
+// }
+// main();

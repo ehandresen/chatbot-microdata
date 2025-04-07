@@ -23,8 +23,8 @@ export async function splitDocuments(
 }
 
 // Test
-async function main() {
-  const rawDocuments = await loadPdf();
-  await splitDocuments(rawDocuments);
-}
-main();
+// async function main() {
+//   const rawDocuments = await loadPdf();
+//   await splitDocuments(rawDocuments);
+// }
+// main();
