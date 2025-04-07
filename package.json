@@ -6,7 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "seed": "ts-node ./scripts/loadDb.ts",
     "lint": "next lint"
   },
   "dependencies": {

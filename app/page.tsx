@@ -1,9 +1,4 @@
-import { textSplitter } from "./lib/textSplitter";
-
 async function HomePage() {
-  // Kommentert ut foreløpig, så den ikke bare konstant laster opp til databasen gjentatte ganger
-  //await textSplitter();
-
   return (
     <div
       className="h-screen w-screen bg-cover bg-center"

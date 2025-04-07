@@ -7,8 +7,6 @@ import { ChatOpenAI } from "@langchain/openai";
 
 import { createRetriever } from "./retriever";
 
-/* Denne filen setter opp en RAG-pipeline som bruker Langchain og OpenAI GPT-4o-mini for å svare på spørsmål basert på hentet kontekst fra dokumenter i Pinecone DB. */
-
 const prompt = ChatPromptTemplate.fromMessages([
   [
     "human",
@@ -38,7 +36,6 @@ const retrievalChain = RunnableSequence.from([
 
 const generationChain = RunnableSequence.from([
   {
-    // (input) => input.question → This is an arrow function that takes input as a parameter and returns input.question.
     question: (input) => input.question,
     context: retrievalChain,
   },
