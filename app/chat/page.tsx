@@ -1,4 +1,10 @@
+import { AskMicrodataTest } from "@/components/AskMicrodataTest";
+
 function ChatbotPage() {
-  return <div>ChatbotPage</div>;
+  return (
+    <>
+      <AskMicrodataTest />
+    </>
+  );
 }
 export default ChatbotPage;
