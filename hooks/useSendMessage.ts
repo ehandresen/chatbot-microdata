@@ -19,80 +19,66 @@ const useSendMessage = ({
   setIsFirstChat,
 }: UseSendMessageProps) => {
   const handleSendMessage = useCallback(
-    (text: string) => {
+    async (text: string) => {
       const now = Date.now();
-      const newMessage: Message = { id: `${now}-${Math.random()}`, text, sender: "user" };
+      const userMessage: Message = { id: `${now}-${Math.random()}`, text, sender: "user" };
 
       const existingNumbers = chats
-        .map((chat) => parseInt(chat.title.replace("Samtale ", ""), 10)) 
-        .filter((num) => !isNaN(num)); 
+        .map((chat) => parseInt(chat.title.replace("Samtale ", ""), 10))
+        .filter((num) => !isNaN(num));
+      const nextChatNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1;
 
-      const nextChatNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1; 
+      let chatToUpdate: Chat;
 
       if (isFirstChat || !activeChat) {
-        const newChat: Chat = {
+        chatToUpdate = {
           id: now.toString(),
           title: `Samtale ${nextChatNumber}`,
           timestamp: now,
-          messages: [newMessage],
+          messages: [userMessage],
         };
+        setChats((prev) => [chatToUpdate, ...prev]);
+        setActiveChat(chatToUpdate);
+        setIsFirstChat(false);
+      } else {
+        chatToUpdate = {
+          ...activeChat,
+          messages: [...activeChat.messages, userMessage],
+        };
+        setChats((prev) =>
+          prev.map((chat) => (chat.id === chatToUpdate.id ? chatToUpdate : chat))
+        );
+        setActiveChat(chatToUpdate);
+      }
 
-        setChats((prevChats) => {
-          const updatedChats = [newChat, ...prevChats];
-          localStorage.setItem("chats", JSON.stringify(updatedChats));
-          return updatedChats;
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: text }),
         });
 
-        setActiveChat(newChat);
-        localStorage.setItem("activeChat", JSON.stringify(newChat));
+        const data = await res.json();
+        const botReply: Message = {
+          id: `${Date.now()}-${Math.random()}`,
+          text: data.response || "Beklager, jeg kunne ikke generere et svar.",
+          sender: "bot",
+        };
 
-        setIsFirstChat(false); 
-
-        setTimeout(() => {
-          const botReply: Message = {
-            id: `${Date.now()}-${Math.random()}`,
-            text: "Beklager, jeg forstår ikke helt ennå! 🚀",
-            sender: "bot",
-          };
-
-          setChats((prevChats) =>
-            prevChats.map((chat) =>
-              chat.id === newChat.id ? { ...chat, messages: [...chat.messages, botReply] } : chat
-            )
-          );
-
-          setActiveChat((prevActiveChat) =>
-            prevActiveChat ? { ...prevActiveChat, messages: [...prevActiveChat.messages, botReply] } : null
-          );
-        }, 1000);
-      } else {
-        setChats((prevChats) =>
-          prevChats.map((chat) =>
-            chat.id === activeChat?.id ? { ...chat, messages: [...chat.messages, newMessage] } : chat
+        setChats((prev) =>
+          prev.map((chat) =>
+            chat.id === chatToUpdate.id
+              ? { ...chat, messages: [...chat.messages, botReply] }
+              : chat
           )
         );
-
-        setActiveChat((prevActiveChat) =>
-          prevActiveChat ? { ...prevActiveChat, messages: [...prevActiveChat.messages, newMessage] } : null
+        setActiveChat((prev) =>
+          prev?.id === chatToUpdate.id
+            ? { ...prev, messages: [...prev.messages, botReply] }
+            : prev
         );
-
-        setTimeout(() => {
-          const botReply: Message = {
-            id: `${Date.now()}-${Math.random()}`,
-            text: "Beklager, jeg forstår ikke helt ennå! 🚀",
-            sender: "bot",
-          };
-
-          setChats((prevChats) =>
-            prevChats.map((chat) =>
-              chat.id === activeChat?.id ? { ...chat, messages: [...chat.messages, botReply] } : chat
-            )
-          );
-
-          setActiveChat((prevActiveChat) =>
-            prevActiveChat ? { ...prevActiveChat, messages: [...prevActiveChat.messages, botReply] } : null
-          );
-        }, 1000);
+      } catch (error) {
+        console.error("🛑 Feil ved henting av svar:", error);
       }
     },
     [chats, activeChat, isFirstChat, setChats, setActiveChat, setIsFirstChat]
@@ -100,5 +86,6 @@ const useSendMessage = ({
 
   return { handleSendMessage };
 };
+
 
 export default useSendMessage;
