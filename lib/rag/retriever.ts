@@ -17,8 +17,11 @@ export async function createRetriever(): Promise<VectorStoreRetriever> {
     pineconeIndex,
   });
 
-  return vectorStore.asRetriever();
+  return vectorStore.asRetriever({
+    k: 10, // Henter 10 relevante dokumenter i stedet for default (ofte 4-5)
+  });
 }
+
 
 // Test
 // async function main() {

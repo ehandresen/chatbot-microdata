@@ -10,18 +10,21 @@ import { createRetriever } from "./retriever";
 const prompt = ChatPromptTemplate.fromMessages([
   [
     "human",
-    `Du er en assistent som skal svare på spørsmål basert på hentet kontekst. Bruk følgende tekstbiter fra dokumentene til å svare på spørsmålet. Hvis du ikke vet svaret, si at du ikke vet. Svar med maks tre setninger og hold svaret kort og presist.
-    Spørsmål: {question}
-    Kontekst: {context}
-    Svar:`,
+    `Du er en ekspert på microdata.no og hjelper brukere med å skrive riktige kommandoer og forstå datagrunnlaget. 
+Svar kun basert på tekstene som er gitt under "Kontekst". Hvis det passer, inkluder kodeblokker med konkrete eksempler. 
+Forklar kort hva hver kommando gjør. Hvis du ikke vet svaret, si det.
+
+Spørsmål: {question}
+Kontekst: {context}
+
+Svar:`,
   ],
 ]);
 
 const llm = new ChatOpenAI({
-  model: "gpt-4o-mini", // GPT-4o-mini er det billigste valget per token og gir samtidig god ytelse for korte, fokuserte svar. https://platform.openai.com/docs/models/gpt-4o-mini
-  maxTokens: 500, // maxTokens har en 'hard max limit'. 500 bør være nok for 3 setninger.
-  // temperature: 1, // Verdi fra 0-2
-  // topP: 1, // Verdi fra 0-1
+  model: "gpt-4o-mini", // Kan byttes til "gpt-4" senere
+  maxTokens: 700,
+  temperature: 0.3, // Lavere temperatur = mer presist
 });
 
 const outputParser = new StringOutputParser();
