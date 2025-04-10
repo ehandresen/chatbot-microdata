@@ -1,9 +1,9 @@
-import { AskMicrodataTest } from "@/components/AskMicrodataTest";
+import { RagChainTest } from "@/components/RagChainTest";
 
 function ChatbotPage() {
   return (
     <>
-      <AskMicrodataTest />
+      <RagChainTest />
     </>
   );
 }
