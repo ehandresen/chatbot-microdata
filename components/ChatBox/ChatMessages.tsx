@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Message } from "@/types/chat"; 
+import MarkdownRenderer from "./MarkdownRenderer";
 
 interface ChatMessagesProps {
   messages?: Message[];
@@ -22,13 +23,16 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages = [] }) => {
             key={message.id} 
             className={`flex ${message.sender === "bot" ? "justify-start" : "justify-end"}`}
           >
-            <span
-              className={`inline-block px-4 py-2 rounded-lg max-w-[75%] ${
-                message.sender === "bot" ? "bg-gray-200 text-black" : "bg-blue-500 text-white"
-              }`}
-            >
-              {message.text}
-            </span>
+          {message.sender === "bot" ? (
+  <div className="bg-gray-200 text-black rounded-lg p-4 max-w-[75%] prose prose-sm">
+    <MarkdownRenderer content={message.text} />
+  </div>
+) : (
+  <span className="inline-block px-4 py-2 rounded-lg max-w-[75%] bg-blue-500 text-white">
+    {message.text}
+  </span>
+)}
+
           </div>
         ))
       )}
