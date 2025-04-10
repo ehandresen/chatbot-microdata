@@ -30,7 +30,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     };
 
     if (inline || !match) {
-      return <code className={className}>{children}</code>;
+      return (
+        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">
+          {children}
+        </code>
+      );
     }
 
     return (
@@ -64,13 +68,15 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   };
 
   return (
-    <ReactMarkdown
-      components={{
-        code: CodeBlock,
-      }}
-    >
-      {content}
-    </ReactMarkdown>
+<div className="prose prose-sm prose-p:mb-4 prose-li:mb-2 prose-headings:mt-4 prose-headings:mb-2 prose-code:font-medium">
+<ReactMarkdown
+        components={{
+          code: CodeBlock,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
   );
 };
 
