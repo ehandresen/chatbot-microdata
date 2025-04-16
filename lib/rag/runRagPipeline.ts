@@ -24,6 +24,7 @@ const llm = new ChatOpenAI({
   model: "gpt-4o-mini", // Kan byttes til "gpt-4" senere
   maxTokens: 700,
   temperature: 0.3, // Lavere temperatur = mer presist
+  streaming: true,
 });
 
 const outputParser = new StringOutputParser();
