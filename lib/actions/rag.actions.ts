@@ -2,7 +2,9 @@
 
 import { generateStandaloneQuestion, generationChain } from "@/lib/rag/runRagPipeline";
 import { Message } from "@/types/chat";
-import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
+import { BaseMessage } from "@langchain/core/messages";
+
+import { toLangchainMessages } from "../utils";
 
 /**
  * Sender et spørsmål og samtalehistorikk til RAG pipelinen og returnerer svaret.
@@ -13,18 +15,14 @@ import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 export async function runRagChain(question: string, chatHistory: Message[]) {
   try {
     // history må være et array av BaseMessage (enten HumanMessage eller AIMessage), slik at LangChain sin pipeline forstår samtalehistorikken riktig
-    const history: BaseMessage[] = chatHistory.map((message) => {
-      return message.sender === "user"
-        ? new HumanMessage(message.text)
-        : new AIMessage(message.text);
-    });
+    const history: BaseMessage[] = toLangchainMessages(chatHistory);
 
     return await generationChain.invoke({
       question: question,
       chat_history: history,
     });
   } catch (error) {
-    console.error("Error in askMicrodata:", error);
+    console.error("Error in runRagChain:", error);
     return "Beklager, noe gikk galt. Prøv igjen senere.";
   }
 }
@@ -34,19 +32,14 @@ export async function generateStandaloneQuestionFromHistory(
   chatHistory: Message[]
 ) {
   try {
-    // Gjør om meldingene til LangChain sitt format
-    const history: BaseMessage[] = chatHistory.map((msg) =>
-      msg.sender === "user"
-        ? new HumanMessage(msg.text)
-        : new AIMessage(msg.text)
-    );
+    const history: BaseMessage[] = toLangchainMessages(chatHistory);
 
     return await generateStandaloneQuestion.invoke({
       question: question,
       chat_history: history,
     });
   } catch (error) {
-    console.error("Error in rephraseQuestion:", error);
+    console.error("Error in generateStandaloneQuestion:", error);
     return "Beklager, noe gikk galt. Prøv igjen senere.";
   }
 }
