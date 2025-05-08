@@ -22,7 +22,13 @@ interface NoteListProps {
   onSelectFolder: (folderId: string | null) => void;
 }
 
-const NoteList: React.FC<NoteListProps> = ({ notes, folders, onEditNote, onEditFolder, onSelectFolder }) => {
+const NoteList: React.FC<NoteListProps> = ({
+  notes,
+  folders,
+  onEditNote,
+  onEditFolder,
+  onSelectFolder,
+}) => {
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [folderName, setFolderName] = useState<string>("");
 
@@ -40,21 +46,21 @@ const NoteList: React.FC<NoteListProps> = ({ notes, folders, onEditNote, onEditF
 
   return (
     <div className="mt-4">
-      {/* Hvis det finnes mapper, vis dem øverst */}
+      {/* Folders */}
       {folders.length > 0 && (
         <ul className="mb-4">
           {folders.map((folder) => (
             <li
               key={folder.id}
-              className="flex items-center justify-between p-2 bg-blue-100 rounded-md shadow mb-2 cursor-pointer hover:bg-blue-200"
+              className="flex items-center justify-between p-2 bg-lightGray rounded-md shadow-sm mb-2 cursor-pointer hover:bg-muted transition"
               onClick={() => onSelectFolder(folder.id)}
             >
               <div className="flex items-center">
-                <FaFolder className="mr-2 text-blue-600" />
+                <FaFolder className="mr-2 text-primary" />
                 {editingFolderId === folder.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1"
+                    className="border border-border rounded px-2 py-1 text-sm"
                     value={folderName}
                     onChange={(e) => setFolderName(e.target.value)}
                     onBlur={() => handleFolderSave(folder.id)}
@@ -62,33 +68,42 @@ const NoteList: React.FC<NoteListProps> = ({ notes, folders, onEditNote, onEditF
                     autoFocus
                   />
                 ) : (
-                  <span>{folder.name}</span>
+                  <span className="text-textSecondary">{folder.name}</span>
                 )}
               </div>
-              <button onClick={(e) => { e.stopPropagation(); handleFolderEdit(folder); }}>
-                <FaEdit className="text-gray-500 hover:text-gray-700" />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFolderEdit(folder);
+                }}
+              >
+                <FaEdit className="text-midGray hover:text-darkGray transition" />
               </button>
             </li>
           ))}
         </ul>
       )}
 
-      {/* Vis notater under mapper */}
+      {/* Notes */}
       {notes.length === 0 ? (
-        <p className="text-gray-500">Ingen notater funnet</p>
+        <p className="text-midGray">Ingen notater funnet</p>
       ) : (
         <ul>
           {notes.map((note) => (
             <li
               key={note.id}
-              className="p-2 bg-white rounded-md shadow mb-2 cursor-pointer hover:bg-gray-200 flex justify-between items-center"
+              className="p-2 bg-surface rounded-md shadow-sm mb-2 cursor-pointer hover:bg-muted transition flex justify-between items-center"
               onClick={() => onEditNote(note)}
             >
-              <span>{note.title}</span>
+              <span className="text-textSecondary">{note.title}</span>
               {note.tags && (
                 <div className="flex space-x-1">
                   {note.tags.map((tag) => (
-                    <span key={tag} className="w-4 h-4 rounded-full" style={{ backgroundColor: tag }}></span>
+                    <span
+                      key={tag}
+                      className="w-4 h-4 rounded-full"
+                      style={{ backgroundColor: tag }}
+                    ></span>
                   ))}
                 </div>
               )}

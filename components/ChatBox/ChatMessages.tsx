@@ -14,21 +14,21 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages = [] }) => {
   }, [messages]);
 
   return (
-    <div className="flex-1 p-4 overflow-y-auto text-gray-600 h-full space-y-4">
+    <div className="flex-1 p-4 overflow-y-auto text-textSecondary h-full space-y-4 bg-surface">
       {messages.length === 0 ? (
-        <p className="text-center text-gray-500">Hei! Hvordan kan jeg hjelpe deg?</p>
+        <p className="text-center text-midGray">Hei! Hvordan kan jeg hjelpe deg?</p>
       ) : (
         messages.map((message) => (
-          <div 
-            key={message.id} 
+          <div
+            key={message.id}
             className={`flex ${message.sender === "bot" ? "justify-start" : "justify-end"}`}
           >
             {message.sender === "bot" ? (
-              <div className="bg-gray-200 text-black rounded-lg p-4 max-w-[75%] prose prose-sm leading-relaxed prose-headings:mt-2 prose-p:mb-3">
+              <div className="bg-lightGray text-darkestGray rounded-2xl p-4 max-w-[75%] prose prose-sm leading-relaxed shadow-sm">
                 <MarkdownRenderer content={message.text} />
               </div>
             ) : (
-              <span className="inline-block px-4 py-2 rounded-lg max-w-[75%] bg-blue-500 text-white">
+              <span className="inline-block px-4 py-2 rounded-2xl max-w-[75%] bg-accent text-white shadow-sm">
                 {message.text}
               </span>
             )}
