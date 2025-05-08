@@ -6,8 +6,8 @@ import ChatPanel from "../ChatPanel/ChatPanel";
 import NotePanel from "../NotePanel/NotePanel";
 import useChat from "@/hooks/useChat";
 import useSendMessage from "@/hooks/useSendMessage";
-import useChatWindowState from "@/hooks/useChatWindowState"; 
-import useDeleteChats from "@/hooks/useDeleteChats"; 
+import useChatWindowState from "@/hooks/useChatWindowState";
+import useDeleteChats from "@/hooks/useDeleteChats";
 
 interface ChatWindowProps {
   closeChat: () => void;
@@ -17,24 +17,48 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
   const {
     chats,
     activeChat,
-    isFirstChat, 
+    isFirstChat,
     setChats,
     setActiveChat,
-    setIsFirstChat, 
+    setIsFirstChat,
     startNewChat,
     openChat,
   } = useChat();
 
   const { isExpanded, toggleExpand } = useChatWindowState();
+
   const { handleSendMessage } = useSendMessage({
     chats,
     activeChat,
     isFirstChat,
     setChats,
     setActiveChat,
-    setIsFirstChat, 
+    setIsFirstChat,
   });
-  const { handleDeleteAllChats } = useDeleteChats({ setChats, setActiveChat }); 
+
+  const { handleDeleteAllChats } = useDeleteChats({ setChats, setActiveChat });
+
+  const handleRenameChat = (chatId: string, newTitle: string) => {
+    const updated = chats.map((chat) =>
+      chat.id === chatId ? { ...chat, title: newTitle.trim() } : chat
+    );
+    setChats(updated);
+    localStorage.setItem("chats", JSON.stringify(updated));
+  };
+
+  const handleDeleteChat = (chatId: string) => {
+    const confirmed = window.confirm("Er du sikker på at du vil slette denne samtalen?");
+    if (!confirmed) return;
+
+    const updated = chats.filter((chat) => chat.id !== chatId);
+    setChats(updated);
+    localStorage.setItem("chats", JSON.stringify(updated));
+
+    if (activeChat?.id === chatId) {
+      setActiveChat(null);
+      localStorage.removeItem("activeChat");
+    }
+  };
 
   return (
     <motion.div
@@ -49,12 +73,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
           activeChat={activeChat}
           onSelectChat={openChat}
           onNewChat={startNewChat}
-          onDeleteAllChats={handleDeleteAllChats} 
+          onDeleteAllChats={handleDeleteAllChats}
+          setChats={setChats}
+          setActiveChat={setActiveChat}
+          onRenameChat={handleRenameChat}
+          onDeleteChat={handleDeleteChat}
         />
       )}
       <div
         className={`bg-white flex flex-col transition-all ${
-          isExpanded ? "w-full max-w-[700px] h-full rounded-none mx-auto" : "w-[450px] h-[500px] rounded-lg border shadow-lg"
+          isExpanded
+            ? "w-full max-w-[700px] h-full rounded-none mx-auto"
+            : "w-[450px] h-[500px] rounded-lg border shadow-lg"
         }`}
       >
         <ChatHeader closeChat={closeChat} toggleExpand={toggleExpand} isExpanded={isExpanded} />

@@ -5,6 +5,8 @@ interface ChatListProps {
   chats: Chat[];
   searchQuery?: string;
   onSelectChat: (chatId: string) => void;
+  onRenameChat: (chatId: string, newTitle: string) => void;
+  onDeleteChat: (chatId: string) => void;
   activeChat: Chat | null;
 }
 
@@ -12,6 +14,8 @@ const ChatList: React.FC<ChatListProps> = ({
   chats,
   searchQuery = "",
   onSelectChat,
+  onRenameChat,
+  onDeleteChat,
   activeChat,
 }) => {
   const filteredChats = chats.filter((chat) =>
@@ -28,7 +32,9 @@ const ChatList: React.FC<ChatListProps> = ({
             key={chat.id}
             chat={chat}
             isActive={chat.id === activeChat?.id}
-            onClick={() => onSelectChat(chat.id)}
+            onSelect={() => onSelectChat(chat.id)}
+            onRename={(newTitle) => onRenameChat(chat.id, newTitle)} // ✅ Riktig nå
+            onDelete={() => onDeleteChat(chat.id)}
           />
         ))
       ) : (

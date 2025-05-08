@@ -3,20 +3,59 @@ import ChatSearch from "./ChatSearch";
 import ChatList from "./ChatList";
 import NewChatButton from "./NewChatButton";
 import DeleteAllChatsButton from "./DeleteAllChatsButton";
-import { Chat } from "@/types/chat"; 
-
+import ConfirmDialog from "@/components/ConfirmDialoge";
+import { Chat } from "@/types/chat";
 
 interface ChatPanelProps {
   onSelectChat: (chatId: string) => void;
   onNewChat: () => void;
-  onDeleteAllChats: () => void; 
+  onDeleteAllChats: () => void;
   chats: Chat[];
+  setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
   activeChat: Chat | null;
+  setActiveChat: React.Dispatch<React.SetStateAction<Chat | null>>;
 }
 
-const ChatPanel: React.FC<ChatPanelProps> = ({ onSelectChat, onNewChat, onDeleteAllChats, chats, activeChat }) => {
+const ChatPanel: React.FC<ChatPanelProps> = ({
+  onSelectChat,
+  onNewChat,
+  onDeleteAllChats,
+  chats,
+  setChats,
+  activeChat,
+  setActiveChat,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
- 
+  const [chatIdToDelete, setChatIdToDelete] = useState<string | null>(null);
+
+  const handleRenameChat = (chatId: string, newTitle: string) => {
+    const updated = chats.map((c) =>
+      c.id === chatId ? { ...c, title: newTitle.trim() } : c
+    );
+
+    setChats(updated);
+    localStorage.setItem("chats", JSON.stringify(updated));
+  };
+
+  const handleDeleteChat = (chatId: string) => {
+    setChatIdToDelete(chatId); // Vis bekreftelsesdialog
+  };
+
+  const confirmDeleteChat = () => {
+    if (!chatIdToDelete) return;
+
+    const updated = chats.filter((c) => c.id !== chatIdToDelete);
+    setChats(updated);
+    localStorage.setItem("chats", JSON.stringify(updated));
+
+    if (activeChat?.id === chatIdToDelete) {
+      setActiveChat(null);
+      localStorage.removeItem("activeChat");
+    }
+
+    setChatIdToDelete(null);
+  };
+
   const filteredChats = chats.filter((chat) =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -30,12 +69,21 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ onSelectChat, onNewChat, onDelete
         chats={filteredChats}
         searchQuery={searchQuery}
         onSelectChat={onSelectChat}
+        onRenameChat={handleRenameChat}
+        onDeleteChat={handleDeleteChat}
         activeChat={activeChat}
       />
-   
       <div className="mt-4 border-t pt-4">
         <DeleteAllChatsButton onDeleteAll={onDeleteAllChats} />
       </div>
+
+      <ConfirmDialog
+        isOpen={!!chatIdToDelete}
+        title="Er du sikker på at du vil slette denne samtalen?"
+        description="Denne handlingen kan ikke angres."
+        onCancel={() => setChatIdToDelete(null)}
+        onConfirm={confirmDeleteChat}
+      />
     </div>
   );
 };
