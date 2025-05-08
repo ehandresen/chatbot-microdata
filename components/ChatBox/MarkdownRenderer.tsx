@@ -31,7 +31,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
     if (inline || !match) {
       return (
-        <code className="bg-muted text-darkestGray px-1 py-0.5 rounded text-sm font-mono">
+        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">
           {children}
         </code>
       );
@@ -41,7 +41,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
       <div className="relative group">
         <button
           onClick={handleCopy}
-          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-surface border border-border text-darkGray px-2 py-1 rounded flex items-center gap-1 shadow-sm"
+          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-white border px-2 py-1 rounded flex items-center gap-1"
         >
           {copied ? (
             <>
@@ -59,11 +59,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
           style={oneDark}
           language={match[1]}
           PreTag="div"
-          customStyle={{
-            borderRadius: "0.5rem",
-            fontSize: "0.85rem",
-            backgroundColor: "#282c34", // override to match dark code block
-          }}
+          customStyle={{ borderRadius: "0.5rem", fontSize: "0.85rem" }}
         >
           {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
@@ -72,8 +68,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   };
 
   return (
-    <div className="prose prose-sm text-textSecondary prose-p:mb-4 prose-li:mb-2 prose-headings:mt-4 prose-headings:mb-2 prose-code:font-medium">
-      <ReactMarkdown
+<div className="prose prose-sm prose-p:mb-4 prose-li:mb-2 prose-headings:mt-4 prose-headings:mb-2 prose-code:font-medium">
+<ReactMarkdown
         components={{
           code: CodeBlock,
         }}
