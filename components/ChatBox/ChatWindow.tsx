@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
@@ -8,9 +10,9 @@ import useChat from "@/hooks/useChat";
 import useSendMessage from "@/hooks/useSendMessage";
 import useChatWindowState from "@/hooks/useChatWindowState";
 import useDeleteChats from "@/hooks/useDeleteChats";
-import useRenameChat from "@/hooks/useRenameChat";
 import SettingsPanel from "../ChatPanel/SettingsPanel";
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { useSettingsStore } from "@/lib/SettingsStore";
 
 interface ChatWindowProps {
   closeChat: () => void;
@@ -29,7 +31,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
   } = useChat();
 
   const { isExpanded, toggleExpand } = useChatWindowState();
-
+  const { textScale } = useSettingsStore();
   const [showSettings, setShowSettings] = useState(false);
 
   const openSettings = () => setShowSettings(true);
@@ -73,7 +75,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className={`fixed ${isExpanded ? "inset-0 flex bg-surface" : "bottom-16 right-4"}`}
+      className={`fixed ${
+        isExpanded ? "inset-0 flex bg-surface dark:bg-darkGray" : "bottom-16 right-4"
+      }`}
+      style={{ fontSize: `${textScale}rem` }}
     >
       {isExpanded && (
         <ChatPanel
@@ -89,17 +94,22 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
         />
       )}
       <div
-        className={`bg-surface flex flex-col transition-all ${
+        className={`flex flex-col transition-all ${
           isExpanded
-            ? "w-full max-w-[700px] h-full rounded-none mx-auto"
-            : "w-[450px] h-[500px] rounded-lg border shadow-lg"
+            ? "w-full max-w-[700px] h-full rounded-none mx-auto bg-surface dark:bg-darkGray"
+            : "w-[450px] h-[500px] rounded-lg border shadow-lg bg-surface dark:bg-darkGray dark:border-midGray"
         }`}
       >
-        <ChatHeader closeChat={closeChat} toggleExpand={toggleExpand} isExpanded={isExpanded} openSettings={openSettings} />
+        <ChatHeader
+          closeChat={closeChat}
+          toggleExpand={toggleExpand}
+          isExpanded={isExpanded}
+          openSettings={openSettings}
+        />
         <div className="flex-1 overflow-y-auto p-4">
           <ChatMessages messages={activeChat ? activeChat.messages : []} />
         </div>
-        <div className="p-4 bg-surface">
+        <div className="p-4 bg-surface dark:bg-darkGray">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </div>

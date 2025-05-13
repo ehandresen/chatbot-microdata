@@ -28,12 +28,8 @@ const NotePanel = () => {
   useEffect(() => {
     const savedNotes = localStorage.getItem("notes");
     const savedFolders = localStorage.getItem("folders");
-    if (savedNotes) {
-      setNotes(JSON.parse(savedNotes));
-    }
-    if (savedFolders) {
-      setFolders(JSON.parse(savedFolders));
-    }
+    if (savedNotes) setNotes(JSON.parse(savedNotes));
+    if (savedFolders) setFolders(JSON.parse(savedFolders));
   }, []);
 
   useEffect(() => {
@@ -66,12 +62,18 @@ const NotePanel = () => {
   };
 
   const handleCreateFolder = () => {
-    const newFolder = { id: Date.now().toString(), name: "Ny mappe", parentFolderId: selectedFolder };
+    const newFolder = {
+      id: Date.now().toString(),
+      name: "Ny mappe",
+      parentFolderId: selectedFolder,
+    };
     setFolders((prev) => [...prev, newFolder]);
   };
 
   const handleEditFolder = (folderId: string, newName: string) => {
-    setFolders((prev) => prev.map((f) => (f.id === folderId ? { ...f, name: newName } : f)));
+    setFolders((prev) =>
+      prev.map((f) => (f.id === folderId ? { ...f, name: newName } : f))
+    );
   };
 
   const handleGoBack = () => {
@@ -80,25 +82,36 @@ const NotePanel = () => {
   };
 
   return (
-    <div className="w-1/4 h-full bg-gray-100 p-4 border-l flex flex-col">
+    <div className="w-1/4 h-full bg-gray-100 dark:bg-darkGray p-4 border-l dark:border-zinc-700 flex flex-col">
       {selectedFolder && (
-        <button onClick={handleGoBack} className="mb-2 bg-gray-300 p-2 rounded-md">Tilbake</button>
+        <button
+          onClick={handleGoBack}
+          className="mb-2 bg-gray-300 dark:bg-zinc-600 text-darkestGray dark:text-white p-2 rounded-md"
+        >
+          Tilbake
+        </button>
       )}
       {isCreating ? (
-        <NewNote note={selectedNote} onSave={handleSaveNote} onCancel={() => setIsCreating(false)} />
+        <NewNote
+          note={selectedNote}
+          onSave={handleSaveNote}
+          onCancel={() => setIsCreating(false)}
+        />
       ) : (
         <>
-          <h2 className="text-lg font-semibold mb-4">
-            {selectedFolder ? folders.find((folder) => folder.id === selectedFolder)?.name : "Notater"}
+          <h2 className="text-lg font-semibold mb-4 text-darkestGray dark:text-white">
+            {selectedFolder
+              ? folders.find((folder) => folder.id === selectedFolder)?.name
+              : "Notater"}
           </h2>
           <NewFolderButton onClick={handleCreateFolder} />
           <NewNoteButton onClick={handleCreateNote} />
-          <NoteList 
-            notes={notes.filter((note) => note.folderId === selectedFolder)} 
-            folders={folders.filter((folder) => folder.parentFolderId === selectedFolder)} 
-            onEditNote={handleEditNote} 
-            onEditFolder={handleEditFolder} 
-            onSelectFolder={setSelectedFolder} 
+          <NoteList
+            notes={notes.filter((note) => note.folderId === selectedFolder)}
+            folders={folders.filter((folder) => folder.parentFolderId === selectedFolder)}
+            onEditNote={handleEditNote}
+            onEditFolder={handleEditFolder}
+            onSelectFolder={setSelectedFolder}
           />
         </>
       )}

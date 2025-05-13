@@ -1,11 +1,16 @@
-// V2, getting there!!
+// components/SettingsPanel.tsx
+"use client";
 import React from "react";
+import { useSettingsStore } from "@/lib/SettingsStore";
 
 interface SettingsPanelObjects {
   onClose: () => void;
 }
 
 const SettingsPanel: React.FC<SettingsPanelObjects> = ({ onClose }) => {
+  const { textScale, setTextScale, isLightMode, toggleLightMode } =
+    useSettingsStore();
+
   return (
     <div className="fixed top-20 right-10 w-[400px] bg-surface shadow-2xl rounded-xl z-50 flex flex-col">
       {/* Header */}
@@ -25,20 +30,6 @@ const SettingsPanel: React.FC<SettingsPanelObjects> = ({ onClose }) => {
 
       {/* Settings objects */}
       <div className="p-4 space-y-6 text-black">
-        {/* Color-scheme */}
-        <div>
-          <label className="block font-semibold mb-1 text-darkestGray">
-            Fargetema
-          </label>
-          <select className="w-full px-3 py-2 border border-darkestGray bg-lightGray text-darkestGray rounded">
-            <option>Trikromasi (Standard)</option>
-            <option>Protanopi (Rød-sensitiv)</option>
-            <option>Deuteranopi (Grønn-sensitiv)</option>
-            <option>Tritanopi (Blå-sensitiv)</option>
-            <option>Achromatopsia (Total Fargeblindhet)</option>
-          </select>
-        </div>
-
         {/* Text size */}
         <div>
           <label className="block font-semibold mb-1 text-darkestGray">
@@ -49,7 +40,8 @@ const SettingsPanel: React.FC<SettingsPanelObjects> = ({ onClose }) => {
             min="0.25"
             max="1.5"
             step="0.25"
-            defaultValue="1"
+            value={textScale}
+            onChange={(e) => setTextScale(Number(e.target.value))}
             className="w-full accent-accent"
           />
           <div className="flex justify-between text-darkGray mt-1">
@@ -64,14 +56,17 @@ const SettingsPanel: React.FC<SettingsPanelObjects> = ({ onClose }) => {
 
         {/* Light/Dark Mode */}
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-darkestGray">Lys modus</span>
+          <span className="font-semibold text-darkestGray">
+            {isLightMode ? "Lys modus" : "Mørk modus"}
+          </span>
           <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" className="sr-only peer" />
-
-            {/* Pill-thing */}
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={isLightMode}
+              onChange={toggleLightMode}
+            />
             <div className="w-11 h-6 bg-muted peer-checked:bg-primary rounded-full transition-colors"></div>
-
-            {/* Ball in pill */}
             <div className="absolute left-1 top-1 bg-primary peer-checked:bg-muted w-4 h-4 rounded-full transition-transform transition-colors peer-checked:translate-x-5" />
           </label>
         </div>

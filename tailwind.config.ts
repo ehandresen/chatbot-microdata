@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "class", // 👈 Legg til denne linjen
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -25,7 +26,7 @@ export default {
         surface: "#ffffff",
         textPrimary: "#ffffff",
         accent: "#e94f35",
-        darkAccent: "#bf3522",  
+        darkAccent: "#bf3522",
       },
     },
   },

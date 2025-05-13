@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -31,7 +33,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
     if (inline || !match) {
       return (
-        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">
+        <code className="bg-lightGray dark:bg-zinc-800 px-1 py-0.5 rounded text-sm font-mono text-darkestGray dark:text-white">
           {children}
         </code>
       );
@@ -41,7 +43,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
       <div className="relative group">
         <button
           onClick={handleCopy}
-          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-white border px-2 py-1 rounded flex items-center gap-1"
+          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs bg-white dark:bg-zinc-800 border dark:border-zinc-700 px-2 py-1 rounded flex items-center gap-1 text-darkestGray dark:text-white"
         >
           {copied ? (
             <>
@@ -68,14 +70,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   };
 
   return (
-<div className="prose prose-sm prose-p:mb-4 prose-li:mb-2 prose-headings:mt-4 prose-headings:mb-2 prose-code:font-medium">
-<ReactMarkdown
-        components={{
-          code: CodeBlock,
-        }}
-      >
-        {content}
-      </ReactMarkdown>
+    <div className="prose prose-sm prose-p:mb-4 prose-li:mb-2 prose-headings:mt-4 prose-headings:mb-2 prose-code:font-medium dark:prose-invert">
+      <ReactMarkdown components={{ code: CodeBlock }}>{content}</ReactMarkdown>
     </div>
   );
 };

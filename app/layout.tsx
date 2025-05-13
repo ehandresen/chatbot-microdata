@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatBox from "@/components/ChatBox/ChatBox";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ThemeWrapper from "@/components/common/ThemeWrapper"; // 👈 Legg til denne
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ErrorBoundary>
-          {children}
-          <ChatBox />
-        </ErrorBoundary>
+        <ThemeWrapper> {/* 👈 Dette trengs for å sette .dark/.light på <html> */}
+          <ErrorBoundary>
+            {children}
+            <ChatBox />
+          </ErrorBoundary>
+        </ThemeWrapper>
       </body>
     </html>
   );
