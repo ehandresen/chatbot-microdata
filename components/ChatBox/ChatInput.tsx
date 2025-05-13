@@ -15,13 +15,17 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Skriv en melding..."
-        className="flex-1 px-4 py-2 bg-transparent focus:outline-none text-textSecondary placeholder-midGray"
+        className="flex-1 px-4 py-2 bg-transparent focus:outline-none text-darkestGray placeholder-midGray"
       />
       <button
         onClick={handleSend}
-        className="bg-accent text-white px-6 py-2 font-bold hover:bg-secondary transition"
+        className="px-6 py-2 font-bold hover:bg-lightBlueAccent transition"
       >
-        Send
+       <img
+    src="/images/Send-icon.png"
+    alt="Send"
+    className="w-5 h-5"
+  />
       </button>
     </div>
   );

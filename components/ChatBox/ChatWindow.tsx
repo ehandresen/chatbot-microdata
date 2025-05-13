@@ -8,6 +8,9 @@ import useChat from "@/hooks/useChat";
 import useSendMessage from "@/hooks/useSendMessage";
 import useChatWindowState from "@/hooks/useChatWindowState";
 import useDeleteChats from "@/hooks/useDeleteChats";
+import useRenameChat from "@/hooks/useRenameChat";
+import SettingsPanel from "../ChatPanel/SettingsPanel";
+import React, {useState} from "react";
 
 interface ChatWindowProps {
   closeChat: () => void;
@@ -26,6 +29,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
   } = useChat();
 
   const { isExpanded, toggleExpand } = useChatWindowState();
+
+  const [showSettings, setShowSettings] = useState(false);
+
+  const openSettings = () => setShowSettings(true);
+  const closeSettings = () => setShowSettings(false);
 
   const { handleSendMessage } = useSendMessage({
     chats,
@@ -65,7 +73,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className={`fixed ${isExpanded ? "inset-0 flex bg-white" : "bottom-16 right-4"}`}
+      className={`fixed ${isExpanded ? "inset-0 flex bg-surface" : "bottom-16 right-4"}`}
     >
       {isExpanded && (
         <ChatPanel
@@ -81,21 +89,22 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ closeChat }) => {
         />
       )}
       <div
-        className={`bg-white flex flex-col transition-all ${
+        className={`bg-surface flex flex-col transition-all ${
           isExpanded
             ? "w-full max-w-[700px] h-full rounded-none mx-auto"
             : "w-[450px] h-[500px] rounded-lg border shadow-lg"
         }`}
       >
-        <ChatHeader closeChat={closeChat} toggleExpand={toggleExpand} isExpanded={isExpanded} />
+        <ChatHeader closeChat={closeChat} toggleExpand={toggleExpand} isExpanded={isExpanded} openSettings={openSettings} />
         <div className="flex-1 overflow-y-auto p-4">
           <ChatMessages messages={activeChat ? activeChat.messages : []} />
         </div>
-        <div className="p-4 bg-white">
+        <div className="p-4 bg-surface">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </div>
       {isExpanded && <NotePanel />}
+      {showSettings && <SettingsPanel onClose={closeSettings} />}
     </motion.div>
   );
 };

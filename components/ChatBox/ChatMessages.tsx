@@ -28,7 +28,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages = [] }) => {
                 <MarkdownRenderer content={message.text} />
               </div>
             ) : (
-              <span className="inline-block px-4 py-2 rounded-2xl max-w-[75%] bg-accent text-white shadow-sm">
+              <span className="inline-block px-4 py-2 rounded-2xl max-w-[75%] bg-accent text-textPrimary shadow-sm">
                 {message.text}
               </span>
             )}
