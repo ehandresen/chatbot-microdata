@@ -82,11 +82,11 @@ const NotePanel = () => {
   };
 
   return (
-    <div className="w-1/4 h-full bg-gray-100 dark:bg-darkGray p-4 border-l dark:border-zinc-700 flex flex-col">
+    <div className="w-1/4 h-full bg-surface dark:bg-darkestGray p-4 border-r dark:border-lightBlueAccent flex flex-col">
       {selectedFolder && (
         <button
           onClick={handleGoBack}
-          className="mb-2 bg-gray-300 dark:bg-zinc-600 text-darkestGray dark:text-white p-2 rounded-md"
+          className="mb-2 bg-gray-300 dark:bg-accent text-darkestGray dark:text-textPrimary p-2 rounded-md"
         >
           Tilbake
         </button>

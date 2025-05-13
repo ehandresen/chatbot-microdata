@@ -60,8 +60,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   );
 
   return (
-    <div className="w-1/4 h-full bg-gray-100 dark:bg-darkGray p-4 border-r dark:border-zinc-700 flex flex-col">
-      <h2 className="text-lg font-semibold mb-4 text-darkestGray dark:text-white">
+    <div className="w-1/4 h-full bg-surface dark:bg-darkestGray p-4 border-r dark:border-lightBlueAccent flex flex-col">
+      <h2 className="text-lg font-semibold mb-4 text-textSecondary dark:text-textPrimary">
         Tidligere Samtaler
       </h2>
       <ChatSearch onSearch={setSearchQuery} />
@@ -74,7 +74,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
         onDeleteChat={handleDeleteChat}
         activeChat={activeChat}
       />
-      <div className="mt-4 border-t pt-4 dark:border-zinc-700">
+      <div className="mt-4 border-t pt-4 dark:border-surface-700">
         <DeleteAllChatsButton onDeleteAll={onDeleteAllChats} />
       </div>
 

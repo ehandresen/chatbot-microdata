@@ -42,12 +42,12 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
   };
 
   const isActiveClass = isActive
-    ? "border-2 border-primary bg-muted"
-    : "bg-surface";
+    ? "border-2 border-lightBlueAccent bg-surface"
+    : "bg-lightGray";
 
   return (
     <div
-      className={`flex justify-between items-center p-3 rounded-md shadow-sm cursor-pointer hover:bg-lightGray transition ${isActiveClass}`}
+      className={`flex justify-between items-center p-3 rounded-md shadow-sm cursor-pointer hover:bg-lightDarkBlueAccent transition ${isActiveClass}`}
     >
       <div onClick={onSelect} className="flex-1">
         {isEditing ? (
@@ -68,7 +68,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
         ) : (
           <>
             <p className="font-medium text-textSecondary">{chat.title}</p>
-            <p className="text-xs text-midGray">
+            <p className="text-xs text-darkestGray">
               {formattedDate} – {formattedTime}
             </p>
           </>

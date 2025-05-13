@@ -31,10 +31,10 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       {/* Collection of window/chatbot functionality buttons */}
       <div className="flex space-x-2 relative">
         {/* Help Button, click toggles information about Orien Chatbot */}
-        <div className="relative">
           <button onClick={toggleTooltip}>
             <img src="/images/Help-icon.png" alt="Help" className="w-10 h-10" />
           </button>
+          <div className="fixed">
           {showTooltip && (
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 rounded bg-darkestGray text-textPrimary 
               text-sm transition-opacity duration-200 whitespace-nowrap z-10 shadow-lg">
@@ -66,6 +66,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           <img src="/images/Close-icon.png" alt="Close" className="w-10 h-10" />
         </button>
       </div>
+      
     </div>
   );
 };

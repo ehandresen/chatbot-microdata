@@ -19,11 +19,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages = [] }) => {
 
   return (
     <div
-      className="flex-1 p-4 overflow-y-auto h-full space-y-4 bg-surface dark:bg-darkGray"
+      className="flex-1 p-4 overflow-y-auto h-full space-y-4 bg-surface dark:bg-darkestGray"
       style={{ fontSize: `${textScale}rem` }}
     >
       {messages.length === 0 ? (
-        <p className="text-center text-midGray dark:text-lightGray">
+        <p className="text-center text-darkGray dark:text-textPrimary">
           Hei! Hvordan kan jeg hjelpe deg?
         </p>
       ) : (
@@ -33,11 +33,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages = [] }) => {
             className={`flex ${message.sender === "bot" ? "justify-start" : "justify-end"}`}
           >
             {message.sender === "bot" ? (
-              <div className="bg-lightGray text-darkestGray rounded-2xl p-4 max-w-[75%] prose prose-sm leading-relaxed shadow-sm dark:bg-darkGray dark:text-white">
+              <div className="bg-lightGray text-darkestGray rounded-2xl p-4 max-w-[75%] prose prose-sm leading-relaxed shadow-sm dark:bg-darkGray dark:text-textPrimary">
                 <MarkdownRenderer content={message.text} />
               </div>
             ) : (
-              <span className="inline-block px-4 py-2 rounded-2xl max-w-[75%] bg-accent text-textPrimary shadow-sm dark:bg-darkAccent">
+              <span className="inline-block px-4 py-2 rounded-2xl max-w-[75%] bg-accent text-textPrimary shadow-sm dark:bg-lightDarkBlueAccent dark:text-darkestGray">
                 {message.text}
               </span>
             )}

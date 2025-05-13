@@ -38,7 +38,7 @@ const ChatList: React.FC<ChatListProps> = ({
           />
         ))
       ) : (
-        <p className="text-midGray text-center mt-4">Ingen treff</p>
+        <p className="text-darkAccent text-center mt-4 dark:text-accent">Ingen treff</p>
       )}
     </div>
   );
