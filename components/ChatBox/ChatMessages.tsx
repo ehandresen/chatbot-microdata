@@ -11,7 +11,6 @@ interface ChatMessagesProps {
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages = [] }) => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const { textScale } = useSettingsStore();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
