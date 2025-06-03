@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -33,7 +32,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
     if (inline || !match) {
       return (
-        <code className="bg-lightGray dark:bg-zinc-800 px-1 py-0.5 rounded text-sm font-mono text-darkestGray dark:text-white">
+        <code className="bg-lightGray dark:bg-darkGray-800 px-1 py-0.5 rounded text-sm font-mono text-darkestGray dark:text-textPrimary">
           {children}
         </code>
       );

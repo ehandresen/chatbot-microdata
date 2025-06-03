@@ -22,11 +22,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Skriv en melding..."
-        className="flex-1 px-4 py-2 bg-transparent focus:outline-none text-darkestGray placeholder-midGray dark:text-white dark:placeholder-lightGray"
+        className="flex-1 px-4 py-4 focus:outline-none bg:lightGray text-darkGray placeholder-lightDarkBlueAccent dark:bg-darkestGray dark:text-textPrimary dark:placeholder-lightBlueAccent"
       />
       <button
         onClick={handleSend}
-        className="px-6 py-2 font-bold hover:bg-lightBlueAccent transition dark:hover:bg-lightDarkBlueAccent"
+        className="px-6 py-2 font-bold bg-surface dark:bg-darkestGray hover:bg-lightBlueAccent transition dark:hover:bg-lightDarkBlueAccent"
       >
         <img
           src="/images/Send-icon.png"

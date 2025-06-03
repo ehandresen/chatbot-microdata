@@ -29,7 +29,7 @@ const SettingsPanel: React.FC<SettingsPanelObjects> = ({ onClose }) => {
       </div>
 
       {/* Settings objects */}
-      <div className="p-4 space-y-6 text-black">
+      <div className="p-4 space-y-6 text-darkestGray">
         {/* Text size */}
         <div>
           <label className="block font-semibold mb-1 text-darkestGray">
