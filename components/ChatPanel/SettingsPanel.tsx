@@ -54,7 +54,6 @@ const SettingsPanel: React.FC<SettingsPanelObjects> = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Light/Dark Mode */}
         <div className="flex items-center justify-between">
           <span className="font-semibold text-darkestGray">
             {isLightMode ? "Lys modus" : "Mørk modus"}

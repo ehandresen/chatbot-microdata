@@ -33,7 +33,7 @@ const ChatList: React.FC<ChatListProps> = ({
             chat={chat}
             isActive={chat.id === activeChat?.id}
             onSelect={() => onSelectChat(chat.id)}
-            onRename={(newTitle) => onRenameChat(chat.id, newTitle)} // ✅ Riktig nå
+            onRename={(newTitle) => onRenameChat(chat.id, newTitle)}
             onDelete={() => onDeleteChat(chat.id)}
           />
         ))

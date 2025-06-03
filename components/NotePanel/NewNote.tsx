@@ -15,7 +15,7 @@ interface NewNoteProps {
   selectedFolder: string | null;
 }
 
-const colorOptions = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F6"]; // Fargene
+const colorOptions = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F6"];
 
 const NewNote: React.FC<NewNoteProps> = ({ note, onSave, onCancel, selectedFolder }) => {
   const [title, setTitle] = useState(note?.title || "");

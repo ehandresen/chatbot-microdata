@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeWrapper> {/* 👈 Dette trengs for å sette .dark/.light på <html> */}
+        <ThemeWrapper> 
           <ErrorBoundary>
             {children}
             <ChatBox />

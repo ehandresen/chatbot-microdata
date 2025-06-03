@@ -36,7 +36,7 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     if (trimmed && trimmed !== chat.title) {
       onRename(trimmed);
     } else {
-      setTitle(chat.title); // Reset if empty or unchanged
+      setTitle(chat.title); 
     }
     setIsEditing(false);
   };
